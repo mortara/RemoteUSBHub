@@ -1,8 +1,9 @@
 #include "BIG7USBHub.hpp"
-
+#include "pmCommonLib.hpp"
 
 void BIG7Hub::begin()
 {
+    
     pinMode(_enablePIN, OUTPUT);
     pinMode(_led1PIN, INPUT_PULLDOWN);
     pinMode(_led2PIN, INPUT_PULLDOWN);
@@ -19,14 +20,14 @@ void BIG7Hub::begin()
 
 void BIG7Hub::turnOn()
 {
-    WebSerialLogger.println("BIG7Hub turnOn");
+    pmLogging.LogLn("BIG7Hub turnOn");
     digitalWrite(_enablePIN, HIGH);
     _hubPower = true;
 }
 
 void BIG7Hub::turnOff()
 {
-    WebSerialLogger.println("BIG7Hub turnOff");
+    pmLogging.LogLn("BIG7Hub turnOff");
     digitalWrite(_enablePIN, LOW);
     _hubPower = false;
 }

@@ -2,12 +2,9 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <SPI.h>
-#include "Wifi/wifimanager.hpp"
+#include "pmCommonLib.hpp"
 #include "webserver.hpp"
-#include "Webserial/webserial.hpp"
 #include "power_sensor.hpp"
-#include "MQTT/mqtt.hpp"
-#include "secrets.h"
 #include "BIG7USBHub.hpp"
 
 
@@ -23,6 +20,16 @@ Adafruit_SSD1306 *_display;
 bool _displaypresent = false;
 
 
+void mqtt_callback(char* topic, byte* payload, unsigned int length) {
+    
+  String msg;
+  for (byte i = 0; i < length; i++) {
+      char tmp = char(payload[i]);
+      msg += tmp;
+  }
+  pmLogging.LogLn(msg);
+}
+
 void setup() 
 {
   setCpuFrequencyMhz(80);
@@ -30,23 +37,22 @@ void setup()
   Serial.begin(115200);
   _hub.begin();
 
-  Wire.begin(21,22);
+  Wire.begin(5,6);
+
+  pmCommonLib.Setup();
 
   _display = new Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
   _power1 = new PowerSensor(0x40);
 
-  WIFIManager.Setup(DEVICE_NAME, WIFISSID, WIFIPASS);
-  WebServer.Setup(handleRoot, notFound);
-  
-  MQTTConnector.Setup(DEVICE_NAME, "BIG7", "Patrick Mortara", MQTTBROKER, 1883, MQTTUSER, MQTTPASSWORD);
-
+  pmCommonLib.MQTTConnector.ConfigureDevice("RemoteuSBHub", "Patrick Mortara", "MKI");
+ 
   if(!_display->begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
-    WebSerialLogger.println(F("SSD1306 allocation failed"));
+    pmLogging.LogLn(F("SSD1306 allocation failed"));
   }
   else
   {
-    WebSerialLogger.println(F("SSD1306 allocation succesfull"));
+    pmLogging.LogLn(F("SSD1306 allocation succesfull"));
 
     _display->setTextSize(1);      // Normal 1:1 pixel scale
     _display->setTextColor(WHITE, BLACK); // Draw white text
@@ -63,8 +69,8 @@ void setup()
 
 void loop() {
   
-  MQTTConnector.Loop();
-  WIFIManager.Loop();
+  pmCommonLib.Loop();
+  
   _power1->Loop();
 
   INAMeasurement measure = _power1->GetMeasurement(2);

@@ -1,20 +1,19 @@
 #include "Arduino.h"
-#include "Webserial/webserial.hpp"
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
 class BIG7Hub
 {
     private:
-        uint8_t _enablePIN = 14;
-        uint8_t _led1PIN = 27;
-        uint8_t _led2PIN = 26;
-        uint8_t _led3PIN = 25;
-        uint8_t _led4PIN = 0;
-        uint8_t _led5PIN = 0;
-        uint8_t _led6PIN = 0;
-        uint8_t _led7PIN = 0;
-        uint8_t _powerledPIN= 0;
+        uint8_t _enablePIN = 15;
+        uint8_t _led1PIN = 18;
+        uint8_t _led2PIN = 19;
+        uint8_t _led3PIN = 20;
+        uint8_t _led4PIN = 21;
+        uint8_t _led5PIN = 22;
+        uint8_t _led6PIN = 23;
+        uint8_t _led7PIN = 10;
+        uint8_t _powerledPIN= 11;
 
         bool _hubPower = false;
 

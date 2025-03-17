@@ -2,10 +2,9 @@
 #include <INA3221.h>
 #include <driver/adc.h>
 #include "esp_adc_cal.h"
-#include "I2C/i2cdevice.hpp"
-#include "MQTT/mqtt.hpp"
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include "I2C/i2cdevice.hpp"
 
 struct INAMeasurement
 {
